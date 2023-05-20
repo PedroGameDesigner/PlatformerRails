@@ -15,6 +15,7 @@ namespace PlatformerRails
         Rigidbody rigidbody;
         IRail currentSingleRail;
 
+        public event System.Action OnLocalPositionUpdated;
         public event System.Action<IRail> RailChangeEvent;
 
         public IRail Rail => rail != null ? rail : railBehaviour;
@@ -76,6 +77,7 @@ namespace PlatformerRails
                 Velocity = Quaternion.Inverse(newrot) * transform.rotation * Velocity;
             transform.rotation = newrot;
             CheckUsedRail(usedRail);
+            OnLocalPositionUpdated?.Invoke();
         }
 
         IEnumerator RunLateFixedUpdate()

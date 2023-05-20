@@ -36,22 +36,25 @@ public class PlayerMove : MonoBehaviour
 
 	void FixedUpdate()
     {
+        var velocity = Controller.Velocity;
         //To make X value 0 means locate the character just above the rail
-        Controller.Velocity.x = -Controller.Position.x * 5f;
+        velocity.x = -Controller.Position.x * 5f;
         //Changing Z value in local position means moving toward rail direction
-        Controller.Velocity.z += Input.GetAxisRaw("Horizontal") * Accelaration * Time.fixedDeltaTime;
-        Controller.Velocity.z -= Controller.Velocity.z * Drag * Time.fixedDeltaTime;
+        velocity.z += Input.GetAxisRaw("Horizontal") * Accelaration * Time.fixedDeltaTime;
+        velocity.z -= Controller.Velocity.z * Drag * Time.fixedDeltaTime;
         //Y+ axis = Upwoard (depends on rail rotation)
         var distance = CheckGroundDistance();
         if (distance != null)
         {
             //Controller.Velocity.y = (GroundDistance - distance.Value) / Time.fixedDeltaTime; //ths results for smooth move on slopes
-            Controller.Velocity.y = 0f;
+            velocity.y = 0f;
             if (Input.GetButtonDown("Jump"))
-                Controller.Velocity.y = JumpSpeed;
+                velocity.y = JumpSpeed;
         }
         else
-            Controller.Velocity.y -= Gravity * Time.fixedDeltaTime;
+            velocity.y -= Gravity * Time.fixedDeltaTime;
+
+        Controller.Velocity = velocity;
     }
 
     void CorrectGroundDistance()
